@@ -52,7 +52,12 @@ wsServer.on('connection', (socket) => {
     socket['nickname'] = nickName;
     console.log(roomName, nickName);
     socket.to(roomName).emit('Welcome', socket.nickname, countRoom(roomName)); // "welcome" event를 roomName에 있는 모든 사람에게 emit(방에 들어온 당사자를 제외하고)/ 프론트에서 이 emit에 반응하도록 해줘야함
+    socket.to(roomName).emit('welcomeRTC');
     wsServer.sockets.emit('room_change', publicRooms()); // 방에 들어왔을 때 방 정보 입력
+  });
+
+  socket.on('offer', (offer, roomName) => {
+    socket.to(roomName).emit('offer', offer);
   });
 
   socket.on('disconnecting', () => {
